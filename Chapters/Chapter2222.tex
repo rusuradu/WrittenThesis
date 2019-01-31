@@ -1,0 +1,103 @@
+\chapter{Introducing FiiEv Method}
+\lhead{Introducing FiiEv Method}
+\rhead{Radu-George Rusu}
+\label{chapt1}
+This chapter will cover some of the evaluation methods used in other universities and will describe a method which tries to solve the problem of evaluation in team project based learning. Also, during this, and next chapter will define the problems that occur in the grading process and which solutions can apply to solve them.
+
+\section{Generalized Peer Rank Rule}
+One of the problem that appear in team project based evaluation, is the perception of the lecturer over the final result presented by students, as a group contribution and not as a individual contribution for every student. We briefly reminded this problem in Introduction. A solution for this is to ask students inside a group to evaluate each other and themselves. In this manner, the lecturer can have 24/7 view over the work of the group, on every student in an individual way, without then being forced to violate the privacy of their students.
+
+This solution raises two main problems:
+\begin{itemize}
+	\item (P1) When a student evaluates another student, social biases can occur (e.g. if a student S, evaluates a student friend F, S may be inclined to raise the grade of F only because they are friends);
+	\item (P2) How can you determine, two different persons, to evaluate a piece of work in an. objective manner (two students can give highly different grades to the same piece of work) 
+\end{itemize}
+For solving (P1), a method suitable for online courses, that mitigate social biases is described in \cite{walsh}. The problem that appear in online courses, is the immense number of people who take the course, and how you can evaluate their final exam/project. It is impractical to have an evaluation committee to do this, from both points of view of time and man power. Solutions for that is to ask other people which took the course to evaluate the work of other participants. The same problem as the one described in (P1) appear in this case, so a common solution can be used.
+
+\subsection{Method Description}
+To obtain a mark for a student, the other students inside the group will mark the work done by themselves and the other colleagues. Afterwards will use an iterated algorithm to obtain the final grade. To define the mathematical model, will use the following notations:
+\begin{itemize}
+	\item $m$ - number of students inside a group;
+	\item $A_{i,j}$ - grade provided by student $j$ for work done by student $i$ $(0 \leq A_{i,j} \leq 1)$, $1 \leq i, j \leq m$. (Note that $i$ can be equal to $j$ which mean that every student should evaluate themselves);
+	\item $X_i^n$ - grade of student $i$ after $n$ iterations of the Generalized Peer Rank Rule;
+	\item $\alpha, \beta$ - two constants values such that $0 < \alpha, \beta < 1$ and $\alpha + \beta \leq 1$.
+\end{itemize}
+The Generalized Peer Rank Rule is defined recursively by the next two equations:
+\begin{itemize}
+	\item $X_i^0 = \frac{1}{m} \sum\limits_{j=1}^{m} A_{i,j}$
+	\item $X_i^{n+1} = (1 - \alpha - \beta) X_i^n + \frac{\alpha}{\sum\limits_{j=1}^{m}X_j^n} \sum\limits_{j=1}^{m} X_j^n A_{i,j} + \frac{\beta}{m}\sum\limits_{j=1}^{m}1 - \big{|} A_{j,i} - X_j^n \big{|}$, for $n \ge 0$
+\end{itemize}
+If the convergence holds the method has interesting properties \cite{walsh}.
+
+\subsection{Experimental Results}
+The authors of this rule made some experiments using synthetic data and they draw a few conclusions based on the initial distribution of marks and final distribution of them, the group size (size of $m$) and the possibility of biases in the initial grading process. In all of the experiments, the value of $0.1$ for $\alpha$ and $\beta$ was used, since any other values would not give significantly different results. Peer rank rule was compared to the method of simply averaging the initial grades, and the factor of comparison was root square mean error. In this sections we will focus on the experiments that regards the group size, and the possibility of biases.
+
+One of the experiments was aiming to spot the behaviour of this rule when subjectivism appear in the initial grades given by the students. They set up a certain factor r, which will give the value of grades bias. The results were in favor of the rule, since it can tolerate a bias up to $25\%$, with an error less than $5\%$. Taking that into account, the method can be used to mitigate the problem (P1).
+
+Regarding to the group size, most of the experiments were using a group size of $10$. Then they tried to use different group size and they discovered that on a lower bound equal to $5$ the error was less than $5\%$, and was half or less than the simply averaging the grades method. For upper bound they established a limit of $20$ that had an error less than a third of the error obtained by simply averaging grades. From this we can conclude that this method can be used in team project based learning since the groups are around the size of the lower and upper bounds determined by the experiments.
+
+\subsection{Conclusions}
+This method weights grades by the grading agents \cite{walsh}. It rewards students who grades well and objectively, and penalize the ones who grades poorly, which if it is presented forwards, will determine students to try an objective evaluation knowing that the way they grade influence their own final mark.
+
+\section{Grading Systems}
+
+\subsection{Gauss Bell Curve}
+In Romania, at Faculty of Computer Science, from University "Alexandru Ioan Cuza" Ia\c si, the following main method of grading is used: every course has a method of evaluation, that results in a final score for that course. A lower limit is established, students which have the final score lower that limit are considered to have failed the course, and their grade is 4. For the ones who passed, the final scores are sorted in decreasing order and their final grades are assigned according to this rules: first $5\%$ gets 10, next $10\%$ 9, next $20\%$ 8, next $30\%$ 7, next $25\%$ 6 and last $10\%$ 5. Will call this Gauss Bell Curve Method. Using this method you get a final distribution of grades that maps very well to the normal distribution which is the ideal way that grades should map on a normal set of students. This can be said because of the Central Limit Theorem which states that the averages of random variables drawn from independent distributions are normally distributed \cite{wikiNormalDistr}. This type of grading promotes competitive spirit, and often produces good results, but when you have to use it with students grading other students inside a group, few problems occurs: the group size is usually small (around 5 to 10 members), so the percentage used cannot be applied to this small population, the idea of numerical grades is often subjective (a grade of 8 can mean different thing to a student and it is influenced by a lot of different factors).
+
+\subsection{Peer and Self Evaluation}
+In \cite{peev} the authors classify Peer and Self Evaluation in 3 categories:
+\begin{itemize}
+	\item evaluation based on rankings - students are asked to rank their colleagues between each other
+	\item evaluation based on dividing certain amount of assets (suppose that we have an amount of credits we distribute those among team colleagues)
+	\item evaluation based on quantitative description - a set of learning objective is defined, and a set of levels; for every level on every learning objective we give a description, and for every student you can assign a level to every learning objective
+\end{itemize}
+First two categories, as Gauss Bell Curve Method, promotes competitive behaviour, as the students should rank their colleagues between each other. The third category promotes a critical behaviour and eliminates the idea of comparing students between them, which in most cases is a benefic way of evaluation and implies, on certain scale, objectivity. So, in order to solve problem (P2) will use this method when asking students to evaluate each other because a description made in natural language is easier to comprehend than a given numerical evaluation criteria.
+\subsection{Conclusions}
+Method described in section 1.2.2 brings a lot of advantages, but cannot be used in learning systems that are required to give, in the end, a numerical grade. In that manner, a good way to obtain advantages from both methods, Gauss Bell Curve and Peer and Self Evaluation, is to combine them in such a way that disadvantages which can appear are minimum. This method maps very well in small groups, and can be used with Generalized Peer Rank Rule.
+
+\section{FiiEv Method}
+To get all the advantages from a competitive method, and Peer and Self Evaluation method, there should be a way in which students evaluates each other based on a quantitative description method, and a competent entity to translate this type of evaluation in numerical grades.
+
+\subsection{Method Description}
+We will be defining two entities:
+\begin{itemize}
+	\item Evaluation Committee (EC) - the entity responsible for supervising the evaluation process (translation between quantitative description and numerical grades, determination of the learning objective, levels and description of each level for every learning objective). This entity, in project based learning is usually the lecturer, but is defined as a more general entity, because the method, that will be described later, can be easily extended to a more general context.
+	\item Students (S) - the entity which will be evaluated and receive in the end a final grade
+\end{itemize}
+
+The system of evaluation will work this way:
+\begin{itemize}
+	\item EC will establish two sets, a set of learning objectives (LO), and a sets of levels (L)
+	\item EC will create a matrix $M_D$ (matrix of description), of dimension $\big{|} L \big{|} \times \big{|} LO \big{|} $, which on every cell, it will contain a quantitative description, in natural language, of what each level mean, for every learning objective
+	\item $M_D$ will be used by students to evaluate themselves and their colleagues, so students will not give any numerical grades, but only quantitative description evaluations
+	\item EC establish a way from which the evaluations received from students are translated to numerical grades. The method of translation is partially made public (students know what method is used, but will not be able to compute themselves the final grades). This methods will be widely explained in the next chapter. 
+	\item on the grades received at the previous step, the Generalized Peer Rank Rule is applied, and the grades resulted from that are used as the final grades
+\end{itemize}
+
+\subsection{Aggregation Methods}
+In the previous section it was briefly reminded, that should exists a mechanism for translating the evaluations made by students (which are level relatively to learning objectives) to numerical grades. In this subsections will present two ways for achieving that objective.
+\subsubsection{Average Aggregation Rule}
+For using this method the evaluation committee should elaborate another matrix and an array of weights defined bellow. Will denote $noLevels =  \big{|} L \big{|}$ and $noLearnigObjectives = \big{|} LO \big{|} $. The following elements should be used:
+\begin{itemize}
+	\item $Average\ Weight\ Vector\ (AWV) = (w_1, w_2, \cdots w_{noLearningObjectives})$;
+	\item $Average\ Grades\ Matrix\ (AGM)$ of dimension $noLevels \times noLearningObjective$;
+	\item $AGM_{level, objective} = grade$, where $grade$ is a numerical value in range $[0, 1]$, that represent the grade that the student obtain, if it reaches a certain level for a certain learning objective (value from $M_D$).
+\end{itemize}
+
+Having done so, the final grade of a student $i$, based on his evaluation received from another student $j$, will consists the input matrix $A$ for the Generalized Peer Rank Rule, and
+$$A_{i,j} = \sum\limits_{i=0}^{noLearningObjective - 1} AWV_i \cdot AGM_{i, M_D (i, j)}$$.
+\subsubsection{Borda Aggregation Rule}
+Although the weighted mean is widely use, in process of grading it is not always best to use this type of aggregation. So, in order to avoid the usage of weighted mean, we will use a modified Borda \cite{borda} voting protocol. For doing such, the evaluation committee should elaborate a Borda Score Matrix which will make the translation between the grades received by students and numerical grades.
+
+A Borda Scores Matrix (BMS)is defined as follow:
+\begin{itemize}
+	\item its size will be $noLevels \times noLearningObjective$;
+	\item for every learning objective an ordering over the level set will be made;
+	\item $BMS_{level, objective} = noLevels - position + 1$, where $position$ is the position of the level in the ordering established at precedent point
+\end{itemize}
+
+To obtain input matrix for Generalized Peer Rank Rule will take every level received for a certain objective, take the Borda Score from BMS, and sum all of them to obtain an overall score. This score will be then divided to a value equal to $noLevels \times noLearningObjective$ which is the highest score that a student can receive during an evaluation.
+
+\subsection{Conclusions}
+Using this method will get all the advantages of the methods described in this chapter. We get social bias elimination by using Generalized Peer Rank Rule, we imply to students an analytical spirit by using quantitative description method, and promote competitive behaviour by using a ranking system for the final grades, but only on the final results, and during evaluation (a competitive beahaviour during grading process can results in negative influences over the objectivity of evaluation).s
+

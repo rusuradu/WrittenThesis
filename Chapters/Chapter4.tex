@@ -1,0 +1,686 @@
+\chapter{Simulation and experimental results}
+%\lhead{Introduction}
+%\rhead{Radu-George Rusu}
+\section{Data}
+\label{chapt3}
+In this work three heuristic algorithms are used to solve the problem of variable selection: Genetic algorithm, Hill Climbing (with two neighbor selection strategies, first improvement and best improvement) and tested on four real data sets and one synthetic generated set.
+
+The \textit{real data sets} are:
+\begin{itemize}
+	\item \textbf{House Data set}: predict house prices according to number of bedrooms, floor space, number of fireplaces, number of rooms, storm windows (1 if present, 0 if not), front footage of lot in feet, annual taxes, number of bathrooms, construction (1 if frame, 0 if brick),garage size, condition (1 if need work, 0 otherwise), location 1 (1 if property is in zone A, 0 otherwise), location 2 (1 if property is in zone B, 0 otherwise);
+	
+	\item \textbf{Air pollution Data set}: predict the mortality rate according to precipitation, temperature 1, temperature 7, age, household, education, housing, population, whitecollar, income, hydrocarbon, nox, CO2, humidity;
+	
+	\item \textbf{Boston Data set}: predict the crime rate according to proportion of residential land zoned for lots over 25,000 sq.ft., proportion of non-retail business acres per town, Charles River dummy variable (1 if tract bounds river; 0 otherwise), nitric oxides concentration (parts per 10 million), average number of rooms per dwelling, proportion of owner-occupied units built prior to 1940, 
+	weighted distances to five Boston employment centers, index of accessibility to radial highways, full-value property-tax rate per \$10,000 , pupil-teacher ratio by town, percentage of lower status of the population, median value of owner-occupied homes in \$1000's; 1000\big(Bk - 0.63\big)\string^2;
+	
+	\item \textbf{Wine Data set}: predict the wine's class (1, 2 or 3) according to alcohol, malice acid, ash, alkalinity of ash, magnesium, total phenols, flavanoids, nonflavanoids phenols, proanthocyanins, color intensity, hue, OD280/OD315 of diluted wines, proline.
+\end{itemize}
+
+The \textit{synthetic data sets} were generated using the following method: we first set the number of independent variables ($n$) and the number of observations ($nobs$), and based on that, we generate, using a normal distribution with mean $0$ and standard deviation $1$. Also using the same parameters the error array is generated. Afterwards $x < n$ variables are selected, and using those variables the $y$ array is generated. We computed two data sets for this purpose (one with $30$ independent variables and one with $50$)
+
+
+\section{Results}
+In order to test the algorithms presented in Chapter \ref{chapt4}, on the above data sets, a small experiment was designed. All the algorithms, were run 10 times on each data set, and afterwards the algorithms are compared based on the following criteria:
+\begin{itemize}
+	\item execution speed (1)
+	\item number of time the objective function (AIC) was computed (2)
+	\item convergence speed (in matter of algorithm iterations) (3)
+	\item how similar is the computed solution with the real one* (4)
+\end{itemize} 
+
+*On all data sets we run the exhaustive search algorithm to find the global minimum of the corresponding set.
+
+This chapter presents the results obtained from the experiment described above. Every one of the following section contains a raw results section which presents the raw data obtained from the experiment. Every table in those sections has 5 columns:
+\begin{itemize}
+	\item $n$ - number of independent variable used, the predictors
+	\item $AIC$ - value of the best AIC function that the algorithm computed
+	\item \textit{Execution time} - how long did the algorithm execute before getting the best AIC value (in seconds)
+	\item \textit{function evaluation number} - how many times the AIC value was computed
+	\item $solution$ - variables selected by the algorithm
+\end{itemize}
+
+In the \textit{Analysis} section of every of the following subsection an \textit{average value iteration} graph can be seen. This graph represent the average way of the behavior for every algorithm at a certain iteration. For the two variations of Hill Climbing the value of the algorithm at a iteration, is the mean of best value at iteration $i$, for all the 10 runs. For the genetic algorithm and particle swarm optimization we had to use a little tweak. Since they are using populations of solutions at every iteration, the mean of the value at iteration $i$, for all the 10 runs, is computed based on the mean of the population mean objective function. This fact can be seen in all the avg iteration value graphs from the following sections, where we can observe that the convergence values of PSO and GA (because of non-optimal solutions inside the populations) are a little bit higher than the ones of hill climbing.
+
+\section{House Data set}
+\label{house results}
+\subsection{Analysis}
+If we take look at figure \ref{Execution Time House}, and \ref{Objective Function House}, we can immediately see the genetic algorithm standing up on both execution speed and number of evaluations. This is mainly caused by the fact that GA runs for 20 iterations without improving before giving a final result. It must be mentioned that for the particle swarm optimization algorithm has a constant number of AIC evaluations, because it's runs on a predefined number of 10 iterations. For the hill climbing variations the results are somehow expected. When we selected the neighbors with a global best strategy it's clear that we are going to have more AIC evaluations and implicit a longer execution time, but on the other hand, as it can be observed in \ref{Avg Value Iteration House},  the best improvement strategy gets to the final solution in less ($ \sim 50\%$) iterations.
+
+ Regarding the number of iterations till the end, (see \ref{Avg Value Iteration House}), we can again see the Genetic Algorithm standing up, and taking on average, 46 iterations to finish it's execution, comparing to the other 3 that are finishing in less than 20 iterations. Until this point it seems the best algorithm for this specific problem can be any one of the Hill Climbing variations or the particle swarm, the genetic algorithm being quite inefficient in the mater of first 3 evaluation criteria.
+ 
+ The best solution for this data set (found using the exhaustive search method) is
+ \{ 0 1 3 4 5 8 9 12\} with an AIC value of $155.09$. Now, if we look at the raw tables in the \ref{rawResHouse} section, we can see that:
+ \begin{itemize}
+ 	\item \textit{Genetic algorithm} found the best solution in 2 out of 10 runs. The other 8 solutions found differs from the best solution with at most 4 variables, and the AIC value is quite close to the best one. Result $20 \%$
+ 	\item \textit{Hill Climbing First Improvement} found the best solution in 10 out of 10 runs. Result $100 \%$
+	\item \textit{Hill Climbing Best Improvement} found the best solution in 10 out of 10 runs. Result $100 \%$
+ 	\item \textit{Particle Swarm Optimization} found the best solution in 8 out of 10 runs. The other two runs found solution that differs by just one variable and with a AIC value which differs from the best solution with less than 1. Result $80 \%$
+ \end{itemize}
+
+Again here we can see that Hill Climbing and PSO are getting good results the genetic algorithm is struggling.
+
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Pictures/HouseExecutionTime.png}
+	\caption{ Execution Time House}
+	\label{Execution Time House}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Pictures/HouseObjectiveFunction.png}
+	\caption{ Objective Function House }
+	\label{Objective Function House}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Pictures/HouseAvgValueIteration.png}
+	\caption{ Avg Value Iteration House }
+	\label{Avg Value Iteration House}
+\end{figure}
+
+\subsection{Raw Results}
+\label{rawResHouse}
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Genetic Algorithm on House Data Set}                                     \\ \hline
+	GA n & GA AIC      & GA Exec Time & GA eval \# & GA solution                  \\ \hline
+	13   & 156.54 & 9.42             & 3110                  & \{ 0 1 3 4 5 8 9 11 12\}     \\ \hline
+	13   & 158.12  & 7.15             & 2457                  & \{ 0 1 2 4 5 8 9 12\}        \\ \hline
+	13   & 155.09 & 10.08            & 3481                  & \{ 0 1 3 4 5 8 9 12\}        \\ \hline
+	13   & 158.88 & 5.56             & 1986                  & \{ 0 1 2 3 4 5 7 8 9 11 12\} \\ \hline
+	13   & 156.54 & 8.87             & 3040                  & \{ 0 1 3 4 5 8 9 11 12\}     \\ \hline
+	13   & 156.65 & 6.54             & 2237                  & \{ 0 1 3 4 5 7 8 9 12\}      \\ \hline
+	13   & 157.33 & 5.58              & 2013                  & \{ 0 1 2 3 4 5 8 9 11 12\}   \\ \hline
+	13   & 157.86 & 10.17             & 3538                  & \{ 0 1 2 3 4 5 6 8 9 12\}    \\ \hline
+	13   & 155.09 & 6.25             & 2261                  & \{ 0 1 3 4 5 8 9 12\}        \\ \hline
+	13   & 156.65 & 8.20             & 2833                  & \{ 0 1 3 4 5 7 8 9 12\}      \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                    \\ \hline
+	13   & 156.87  & 7.78            & 2695.6                &                              \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing First Improvement method on House Data Set}            \\ \hline
+	HCF n & HCF AIC     & HCF Exec Time & HCF eval \# & HCF solution          \\ \hline
+	13    & 155.09 & 0.43              & 68                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.37              & 94                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.35              & 88                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.12               & 39                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.28              & 88                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.16              & 52                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.16              & 51                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.21              & 66                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.21              & 68                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.21              & 69                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                \\ \hline
+	13    & 155.09 & 0.25             & 68.3                   &                       \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing Best Improvement method on House Data Set}             \\ \hline
+	HCB n & HCB AIC     & HCB Exec Time & HCB eval \# & HCB solution          \\ \hline
+	13    & 155.09 & 0.57              & 105                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.64              & 180                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.27              & 90                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.44               & 150                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.35              & 120                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.25              & 90                     & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.35               & 120                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.38              & 105                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.39              & 135                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 0.31               & 105                    & \{ 0 1 3 4 5 8 9 12\} \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                \\ \hline
+	13    & 155.09 & 0.39             & 120                    &                       \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Particle Swarm Optimization on House Data Set}                         \\ \hline
+	PSO n & PSO AIC     & PSO Exec Time & PSO eval \# & PSO solution            \\ \hline
+	13    & 155.87 & 3.88              & 1102                   & \{ 0 1 2 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 3.42              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	13    & 155.09 & 3.33              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	13    & 155.09 & 3.66              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	13    & 155.09 & 3.27              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	13    & 155.09 & 3.34              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	13    & 155.87 & 3.12              & 1102                   & \{ 0 1 2 3 4 5 8 9 12\} \\ \hline
+	13    & 155.09 & 3.12              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	13    & 155.09 & 3.14              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	13    & 155.09 & 3.51              & 1102                   & \{ 0 1 3 4 5 8 9 12\}   \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                  \\ \hline
+	13    & 155.24 & 3.37             & 1102                   &                         \\ \hline
+\end{tabular}
+
+\section{Air Pollution Data Set}
+\subsection{Analysis}
+
+As in previous section, by analyzing the figure \ref{Execution Time Air Pollution} and \ref{Objective Function Air Pollution} we can see the same pattern. Genetic algorithm runs very slow and with a high number of AIC evaluations. For the first 3 criteria the conclusion are similar to the previous section. An interesting point that can be observed from figure \ref{Avg Value Iteration Air Pollution}, and it matches the behavior from other sections, is that the particle swarm optimization algorithm is always starting from a higher AIC value, than the other algorithm, the reason behind being the way of representing the solution of this problem, so the algorithm can be run.
+
+The best solution for this data set is \{ 0 1 2 3 7 9 10 12 14\}, with an AIC value of $378.55$. Looking at the raw data in the \ref{pollRaw} section we can say that:
+\begin{itemize}
+	\item \textit{Genetic Algorithm} managed to find this solution in 0 out of 10 runs. The values of the AIC functions found are close to the optimal ones with a top difference of $\sim 4$, and the solutions found differing in quite a few position. Result $0 \%$
+	\item \textit{Hill Climbing First Improvement} found the best solution in 5 out of 10 runs. The other solution being different by two items, and as AIC value being at only $0.12$ difference. Result $50 \%$
+	\item \textit{Hill Climbing Best Improvement} found the best solution in 6 out of 10 runs. The other runs obtained the same result as the faulty run from the First Improvement method described above. Result $60 \%$
+	\item \textit{Particle Swarm Optimization} found the best solution in 5 out of 10 runs. The other two runs found solution that differs by one or two variable and with a AIC value which differs from the best solution with less than 4. Result $50 \%$
+\end{itemize}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/PollutionExecutionTime.png}
+	\caption{ Execution Time Air Pollution}
+	\label{Execution Time Air Pollution}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/PollutionObjectiveFunction.png}
+	\caption{ Objective Function Air Pollution }
+	\label{Objective Function Air Pollution}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/PollutionAvgValueIteration.png}
+	\caption{ Avg Value Iteration Air Pollution }
+	\label{Avg Value Iteration Air Pollution}
+\end{figure}
+
+\subsection{Raw results}
+\label{pollRaw}
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Genetic Algorithm on Pollution Data Set}                                     \\ \hline
+	GA n & GA AIC      & GA Exec Time & GA eval \# & GA solution                      \\ \hline
+	15   & 381.76 & 15.73            & 3105                  & \{ 0 1 2 3 4 7 8 11 14\}         \\ \hline
+	15   & 380.71  & 13.13            & 2702                  & \{ 0 1 2 3 6 7 8 9 11 14\}       \\ \hline
+	15   & 378.63 & 18.95            & 3798                  & \{ 0 1 2 3 7 9 11 14\}           \\ \hline
+	15   & 386.09 & 11.58            & 2165                  & \{ 0 2 3 7 8 9 10 13 14\}        \\ \hline
+	15   & 382.38 & 11.39             & 2281                  & \{ 0 1 2 3 4 7 9 10 12 13 14\}   \\ \hline
+	15   & 380.37 & 11.96            & 2473                  & \{ 0 1 2 3 5 7 11 14\}           \\ \hline
+	15   & 380.84 & 10.37            & 2017                  & \{ 0 1 2 3 5 7 11 12 14\}        \\ \hline
+	15   & 383.04 & 14.65            & 3008                  & \{ 0 1 2 3 6 7 8 9 10 12 13 14\} \\ \hline
+	15   & 380.89 & 11.05            & 2063                  & \{ 0 1 2 3 7 8 11 14\}           \\ \hline
+	15   & 378.63 & 16.10            & 3017                  & \{ 0 1 2 3 7 9 11 14\}           \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                        \\ \hline
+	15   & 381.33 & 13.49           & 2662.9                &                                  \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing First Improvement Method on Pollution Data Set}                    \\ \hline
+	HCF n & HCF AIC     & HCF Exec Time & HCF eval \# & \multicolumn{1}{c|}{HCF solution} \\ \hline
+	15    & 378.63 & 0.20              & 41                     & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	15    & 378.55 & 0.46               & 88                     & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.63 & 0.45              & 85                     & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	15    & 378.55 & 0.23              & 48                     & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.55 & 0.41               & 78                     & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.55 & 0.37              & 73                     & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.63 & 0.38              & 74                     & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	15    & 378.63 & 0.48               & 92                     & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	15    & 378.55 & 0.31              & 63                     & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.63 & 0.50              & 100                    & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	15    & 378.59 & 0.37             & 74.2                   &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing Best Improvement Method on Pollution Data Set}                     \\ \hline
+	HCB n & HCB AIC     & HCB Exec Time & HCB eval \# & \multicolumn{1}{c|}{HCB solution} \\ \hline
+	15    & 378.55 & 0.57              & 119                    & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.55 & 0.34              & 68                     & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.55 & 0.56              & 119                    & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.55 & 0.58              & 119                    & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.63 & 0.73              & 153                    & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	15    & 378.55 & 0.68              & 136                    & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.63 & 0.67               & 85                     & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	15    & 378.55 & 0.82              & 170                    & \{ 0 1 2 3 7 9 10 12 14\}         \\ \hline
+	15    & 378.63 & 0.48              & 102                    & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	15    & 378.63 & 0.75              & 153                    & \{ 0 1 2 3 7 9 11 14\}            \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	15    & 378.58 & 0.61             & 122.4                  &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Particle Swarm Optimization on Pollution Data Set}                         \\ \hline
+	PSO n & PSO AIC     & PSO Exec Time & PSO eval \# & PSO solution                \\ \hline
+	15    & 380.37 & 6.07              & 1102                   & \{ 0 1 2 3 5 7 11 14\}      \\ \hline
+	15    & 378.55 & 5.84              & 1102                   & \{ 0 1 2 3 7 9 10 12 14\}   \\ \hline
+	15    & 378.55 & 5.70              & 1102                   & \{ 0 1 2 3 7 9 10 12 14\}   \\ \hline
+	15    & 378.55 & 5.81              & 1102                   & \{ 0 1 2 3 7 9 10 12 14\}   \\ \hline
+	15    & 378.63 & 5.51              & 1102                   & \{ 0 1 2 3 7 9 11 14\}      \\ \hline
+	15    & 378.55 & 5.69              & 1102                   & \{ 0 1 2 3 7 9 10 12 14\}   \\ \hline
+	15    & 378.86 & 5.71              & 1102                   & \{ 0 1 2 3 7 9 11 12 14\}   \\ \hline
+	15    & 378.55 & 5.36               & 1102                   & \{ 0 1 2 3 7 9 10 12 14\}   \\ \hline
+	15    & 380.39 & 5.79              & 1102                   & \{ 0 1 2 3 4 7 9 10 12 14\} \\ \hline
+	15    & 379.27  & 5.42              & 1102                   & \{ 0 1 2 3 7 8 9 10 12 14\} \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                      \\ \hline
+	15    & 379.02& 5.69             & 1102                   &                             \\ \hline
+\end{tabular}
+
+\section{Wine Data Set}
+\subsection{Analysis}
+Similar results, as in the previous two sections were obtained also when the algorithms were run on the wine data set. An interesting aspect that can be seen in \ref{Avg Value Iteration Wine} is that the Genetic algorithm  converges quite fast (almost at the same point with the other algorithms), but it still keeps running because of the stop condition (20 iterations without improvement), so, towards the end, the algorithm manages to find, from one population to the another, a small improvement and thus keeps running.
+
+Once again the factor that bring balance in the comparison is closeness to the real solution. For this dataset the best solution is \{ 0 1 2 3 5 6 7 9 11 12\}, with an AIC value of $29.54$. As previous we should note that (based on \ref{rawResWine}):
+\begin{itemize}
+	\item \textit{Genetic Algorithm} managed to find this solution in 2 out of 10 runs. The rest of the results are different in 2 positions, and with an AIC value not far than 2. Result $20 \%$
+	\item \textit{Hill Climbing First Improvement} found the best solution in 5 out of 10 runs. The other solution being different only by two items, and AIC value not more than 4 over the optimal one. Result $50 \%$
+	\item \textit{Hill Climbing Best Improvement} found the best solution in 6 out of 10 runs. Again as in the previous data set, this variations of hill climbing obtained the same "faulty" results as the first improvement variant of it. Result $60 \%$
+	\item \textit{Particle Swarm Optimization} found the best solution in 10 out of 10 runs. Result $100 \%$
+\end{itemize}
+
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/WineExecutionTime.png}
+	\caption{ Execution Time Wine}
+	\label{Execution Time Wine}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/WineObjectiveFunction.png}
+	\caption{ Objective Function Wine }
+	\label{Objective Function Wine}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/WineAvgValueIteration.png}
+	\caption{ Avg Value Iteration Wine }
+	\label{Avg Value Iteration Wine}
+\end{figure}
+
+
+\subsection{Raw results}
+\label{rawResWine}
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Genetic Algorithm on Wine Data Set}                                          \\ \hline
+	GA n & GA AIC      & GA Exec Time & GA eval \# & \multicolumn{1}{c|}{GA solution} \\ \hline
+	13   & 29.54 & 33.32            & 2573                  & \{ 0 1 2 3 5 6 7 9 11 12\}       \\ \hline
+	13   & 31.24  & 36.13            & 2626                  & \{ 0 3 5 6 7 9 10 11 12\}        \\ \hline
+	13   & 30.27 & 38.53            & 3009                  & \{ 0 2 3 5 6 9 10 11 12\}        \\ \hline
+	13   & 29.54 & 32.31            & 2501                  & \{ 0 1 2 3 5 6 7 9 11 12\}       \\ \hline
+	13   & 30.27 & 25.31            & 1966                  & \{ 0 2 3 5 6 9 10 11 12\}        \\ \hline
+	13   & 30.27 & 35.29            & 2416                  & \{ 0 2 3 5 6 9 10 11 12\}        \\ \hline
+	13   & 32.34 & 29.05            & 2201                  & \{ 0 1 2 3 4 5 6 9 11 12\}       \\ \hline
+	13   & 30.27 & 31.92            & 2449                  & \{ 0 2 3 5 6 9 10 11 12\}        \\ \hline
+	13   & 30.41 & 30.89            & 2355                  & \{ 0 1 2 3 5 6 9 11 12\}         \\ \hline
+	13   & 31.50 & 33.60            & 2572                  & \{ 0 1 2 3 4 5 6 7 9 11 12\}     \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                        \\ \hline
+	13   & 30.56 & 32.63           & 2466.8                &                                  \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing First Improvement Method on Wine Data Set}                         \\ \hline
+	HCF n & HCF AIC     & HCF Exec Time & HCF eval \# & \multicolumn{1}{c|}{HCF solution} \\ \hline
+	13    & 30.27 & 0.84              & 64                     & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 29.54 & 1.09              & 74                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 0.57              & 47                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 30.27 & 0.78              & 56                     & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 29.54 & 0.74              & 59                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 30.27 & 1.22              & 95                     & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 29.54 & 0.81              & 51                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 30.27 & 0.98              & 80                     & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 30.27 & 0.90              & 73                     & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 29.54 & 1.21              & 81                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	13    & 29.90 & 0.91             & 68                     &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing Best Improvement Method on Wine Data Set}                          \\ \hline
+	HCB n & HCB AIC     & HCB Exec & HCB eval \# & \multicolumn{1}{c|}{HCB solution} \\ \hline
+	13    & 29.54 & 1.31              & 105                    & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 1.50              & 105                    & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 0.91              & 75                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 30.27 & 1.12              & 90                     & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 29.54 & 1.47              & 105                    & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 30.27 & 1.08              & 90                     & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 30.27 & 1.42              & 105                    & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	13    & 29.54 & 1.1                & 90                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 1.30              & 90                     & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 30.27 & 1.25              & 105                    & \{ 0 2 3 5 6 9 10 11 12\}         \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	13    & 29.83 & 1.24             & 96                     &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Particle Swarm Optimization on Wine Data Set}                                    \\ \hline
+	PSO n & PSO AIC     & PSO Exec Time & PSO eval \# & \multicolumn{1}{c|}{PSO solution} \\ \hline
+	13    & 30.41 & 15.78             & 1102                   & \{ 0 2 3 5 6 7 9 10 11 12\}       \\ \hline
+	13    & 29.54 & 15.82             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.73             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.42             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.42             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.60             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.46             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.23             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.72             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	13    & 29.54 & 14.35             & 1102                   & \{ 0 1 2 3 5 6 7 9 11 12\}        \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	13    & 29.62 & 14.75           & 1102                   &                                   \\ \hline
+\end{tabular}
+
+
+\section{Boston Data Set}
+\subsection{Analysis}
+In the last data set that the algorithms were run we can't say anything new about the first three criteria. The behavior is similar to the previous 3 data sets. Regarding the fourth criteria, the best solution for this data set is \{ 0 3 6 7 9 10 11 12\}, with AIC value of $3329.8004895592726$. The results of the algorithms are (based on \ref{rawResultsBoston}):
+\begin{itemize}
+	\item \textit{Genetic Algorithm} managed to find this solution in 4 out of 10 runs. The rest of the results are different in 2 to 4 positions, and with an AIC value not far than 4. Result $40 \%$
+	\item \textit{Hill Climbing First Improvement} found the best solution in 10 out of 10 runs. Result $100 \%$
+	\item \textit{Hill Climbing Best Improvement} found the best solution in 10 out of 10 runs. Result $100 \%$
+	\item \textit{Particle Swarm Optimization} found the best solution in 10 out of 10 runs. Result $100 \%$
+\end{itemize}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/BostonExecutionTime.png}
+	\caption{ Execution Time Boston}
+	\label{Execution Time Boston}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/BostonObjectiveFunction.png}
+	\caption{ Objective Function Boston }
+	\label{Objective Function Boston}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/BostonAvgValueIteration.png}
+	\caption{ Avg Value Iteration Boston }
+	\label{Avg Value Iteration Boston}
+\end{figure}
+
+\subsection{Raw Results}
+\label{rawResultsBoston}
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Genetic Algorithm on Boston Data Set}                                        \\ \hline
+	GA n & GA AIC      & GA Exec Time & GA eval \# & \multicolumn{1}{c|}{GA solution} \\ \hline
+	13   & 3329.80  & 126.63           & 3386                  & \{ 0 3 6 7 9 10 11 12\}          \\ \hline
+	13   & 3329.80 & 91.62            & 2524                  & \{ 0 3 6 7 9 10 11 12\}          \\ \hline
+	13   & 3329.80  & 87.95            & 2415                  & \{ 0 3 6 7 9 10 11 12\}          \\ \hline
+	13   & 3330.15 & 120.08           & 3374                  & \{ 0 1 3 6 7 10 11 12\}          \\ \hline
+	13   & 3332.44 & 87.22            & 2404                  & \{ 0 1 4 6 7 10 11 12\}          \\ \hline
+	13   & 3332.44 & 69.99            & 1980                  & \{ 0 1 4 6 7 10 11 12\}          \\ \hline
+	13   & 3330.15 & 99.48            & 2712                  & \{ 0 1 3 6 7 10 11 12\}          \\ \hline
+	13   & 3333.30 & 72.11            & 2015                  & \{ 0 1 2 3 4 6 7 10 11 12\}      \\ \hline
+	13   & 3332.77 & 97.73            & 2670                  & \{ 0 6 7 8 10 11 12\}            \\ \hline
+	13   & 3329.80  & 93.52             & 2468                  & \{ 0 3 6 7 9 10 11 12\}          \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                        \\ \hline
+	13   & 3331.04 & 94.63           & 2594.8                &                                  \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing First Improvement Method on Boston Data Set}                      \\ \hline
+	HCF n & HCF AIC    & HCF Exec Time & HCF eval \# & \multicolumn{1}{c|}{HCF solution} \\ \hline
+	13    & 3329.80 & 3.58              & 90                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.77              & 66                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.71              & 72                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 1.77              & 46                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.49              & 68                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.02              & 55                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.86              & 73                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.91               & 76                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.53              & 68                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 1.48              & 38                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                           \\ \hline
+	13    & 3329.80 & 2.51             & 65.2                   &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing Best Improvement Method on Boston Data Set}                       \\ \hline
+	HCB n & HCB AIC    & HCB Exec Time & HCB eval \# & \multicolumn{1}{c|}{HCB solution} \\ \hline
+	13    & 3329.80 & 5.41              & 150                    & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 2.86              & 75                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 4.26              & 120                    & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 5.66              & 150                    & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 5.05              & 135                    & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 4.92              & 135                    & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 3.42              & 90                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 3.42              & 90                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 4.96              & 135                    & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 1.53              & 45                     & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                           \\ \hline
+	13    & 3329.80 & 4.14             & 112.5                  &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Particle Swarm Optimization on Boston Data Set}                                 \\ \hline
+	PSO n & PSO AIC    & PSO Exec Time & PSO eval \# & \multicolumn{1}{c|}{PSO solution} \\ \hline
+	13    & 3329.80 & 43.07              & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 42.96             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 43.97             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 49.90             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 45.13             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 42.25             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 49.30             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 46.72             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 43.94             & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	13    & 3329.80 & 46.73              & 1102                   & \{ 0 3 6 7 9 10 11 12\}           \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                           \\ \hline
+	13    & 3329.80 & 45.39            & 1102                   &                                   \\ \hline
+\end{tabular}
+
+\section{Random Data Set 30}
+\subsection{Analysis}
+This chapter, and the next one, presents the result obtained from conducting the experiment on the synthetic generated data sets.
+On a first look at the figure \ref{Execution Time Random 30} and \ref{Objective Function Random 30} we can notice the same pattern that has been observed in the previous chapters. Genetic algorithm runs very slow and with a high number of AIC evaluations, followed closely by the Particle swarm optimization (for this datasets we let the PSO runnig for 25 iterations, instead of 10). The solution used generating the $y$ vector for the input data (30 variables) is \{0 4 5 7 10 11 19 21 26 27\} with an AIC value 139.41. (In this case this is the real solution and not necessarily the best with regards to the lowest AIC value).
+
+The results of the algorithms are \ref{rawResultsRandom30}:
+\begin{itemize}
+	\item \textit{Genetic Algorithm} didn't find the best solution in 10 runs. The results coincide only in 5 position: 4, 10, 11, 19 and 27 and only on 2 runs these are found together.
+	\item \textit{Hill Climbing First Improvement} didn't find the best solution in 10 runs. The results coincide only in 5 position: 4, 10, 11, 19 and 27 and only on one run these are found together.
+	\item \textit{Hill Climbing Best Improvement} didn't find the best solution in 10 runs. The results coincide only in 5 position: 4, 10, 11, 19 and 27 and only on 2 runs these are found together.
+	\item \textit{Particle Swarm Optimization} didn't find the best solution in 10 runs. The results coincide only in 3 position: 4, 10 and 27 and only on 2 runs these are found together.
+\end{itemize}
+
+As we can notice above, none of the algorithms found the real true solution, but manage to find close approximations of the real one. We can see that in this case the genetic algorithm produced similar results with HIll Climbing (in both forms), and PSO produced the worst results. This is mainly due to the fact that these are optimization algorithms and the objective function that is used has \textit{better} values than the one of the true solution, which will lead the algorithms towards a solution with a better AIC value.
+
+As far as the convergence speed, there is not a noticeable difference between the result on the real data sets and this one. The only thing that stands out is that the genetic algorithm has a less of a steep slope towards the minimum point.
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/Random30ExecutionTime.png}
+	\caption{ Execution Time Random 30}
+	\label{Execution Time Random 30}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Pictures/Random30ObjectiveFunction.png}
+	\caption{ Objective Function Random 30 }
+	\label{Objective Function Random 30}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/Random30AvgValueIteration.png}
+	\caption{ Avg Value Iteration Random 30 }
+	\label{Avg Value Iteration Random 30}
+\end{figure}
+
+\newpage
+\subsection{Raw Results}
+\label{rawResultsRandom30}
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Genetic Algorithm on Random Generated Data Set}                                   \\ \hline
+	GA n & GA AIC & GA Exec Time & GA eval \# & \multicolumn{1}{c|}{GA solution}           \\ \hline
+	30   & 125.52 & 37.52             & 4902                  & \{ 4 9 10 13 25 27\}                       \\ \hline
+	30   & 126.85 & 20.23             & 2586                  & \{ 2 4 10 11 24 25 27 28\}                 \\ \hline
+	30   & 126.77 & 27.75             & 3723                  & \{ 2 4 5 10 13 15 20 27\}                  \\ \hline
+	30   & 130.20 & 11.81             & 1639                  & \{ 2 3 4 8 15 16 19 25 27 28 29\}          \\ \hline
+	30   & 124.98 & 14.35             & 1964                  & \{ 2 4 5 10 11 15 24 27 29\}               \\ \hline
+	30   & 126.99 & 20.26             & 2748                  & \{ 2 3 4 15 29\}                           \\ \hline
+	30   & 128.62 & 15.29             & 2138                  & \{ 10 15 16 24 28 29\}                     \\ \hline
+	30   & 127.42 & 16.48             & 2329                  & \{ 2 4 6 9 10 11 13 14 15 17 19 25 27 29\} \\ \hline
+	30   & 124.81 & 25.72             & 3618                  & \{ 4 10 11 15 18 24 25 27\}                \\ \hline
+	30   & 126.65 & 20.13             & 2848                  & \{ 2 4 6 10 11 13 14 17 19 25 27 29\}      \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                             \\ \hline
+	30   & 126.88 & 20.95             & 2849.5                &                                            \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing First Improvement Method on Random Generated Data Set}          \\ \hline
+	HCF n & HCF AIC     & HCF Exec Time & HCF eval \# & \multicolumn{1}{c|}{HCF solution} \\ \hline
+	30    & 123.60 & 1.43              & 161                    & \{ 4 10 27\}                      \\ \hline
+	30    & 122.23 & 1.06              & 150                    & \{ 4 6 15 27 29\}                 \\ \hline
+	30    & 122.23 & 0.73              & 108                    & \{ 4 6 15 27 29\}                 \\ \hline
+	30    & 122.98  & 1.31              & 162                    & \{ 4 10 11 13 19 25 27\}          \\ \hline
+	30    & 122.90 & 1.04              & 154                    & \{ 4 5 10 15 23 24 25 27\}        \\ \hline
+	30    & 122.90 & 1.21              & 165                    & \{ 4 5 10 15 23 24 25 27\}        \\ \hline
+	30    & 122.90 & 0.82               & 119                    & \{ 4 5 10 15 23 24 25 27\}        \\ \hline
+	30    & 122.90 & 1.01              & 150                    & \{ 4 5 10 15 23 24 25 27\}        \\ \hline
+	30    & 122.23 & 0.87              & 129                    & \{ 4 6 15 27 29\}                 \\ \hline
+	30    & 123.60 & 1.25              & 152                    & \{ 4 10 27\}                      \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	30    & 122.84  & 1.07             & 145                    &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing Best Improvement Method on Random Generated Data Set}           \\ \hline
+	HCB n & HCB AIC     & HCB Exec Time & HCB eval \# & \multicolumn{1}{c|}{HCB solution} \\ \hline
+	30    & 122.98  & 3.60              & 448                    & \{ 4 10 11 13 19 25 27\}          \\ \hline
+	30    & 122.23 & 3.34               & 480                    & \{ 4 6 15 27 29\}                 \\ \hline
+	30    & 122.80 & 3.24              & 448                    & \{ 2 4 10 11 15 19 25 27 29\}     \\ \hline
+	30    & 122.23 & 3.37               & 480                    & \{ 4 6 15 27 29\}                 \\ \hline
+	30    & 122.90 & 3.03              & 448                    & \{ 4 5 10 15 23 24 25 27\}        \\ \hline
+	30    & 122.23 & 3.00              & 416                    & \{ 4 6 15 27 29\}                 \\ \hline
+	30    & 123.54 & 2.29              & 352                    & \{ 4 10 13 25 27\}                \\ \hline
+	30    & 123.54 & 3.44              & 480                    & \{ 4 10 13 25 27\}                \\ \hline
+	30    & 122.23 & 3.17              & 480                    & \{ 4 6 15 27 29\}                 \\ \hline
+	30    & 122.82 & 1.90              & 256                    & \{ 4 10 15 25 27 29\}             \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	30    & 122.75 & 3.03             & 428.8                  &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Particle Swarm Optimization on Random Generated Data Set}                          \\ \hline
+	PSO n & PSO AIC     & PSO Exec Time & PSO eval \# & \multicolumn{1}{c|}{PSO solution}      \\ \hline
+	30    & 122.23 & 20.20             & 2602                   & \multicolumn{1}{c|}{\{ 4 6 15 27 29\}} \\ \hline
+	30    & 122.23 & 18.75             & 2602                   & \multicolumn{1}{c|}{\{ 4 6 15 27 29\}} \\ \hline
+	30    & 122.34  & 18.47             & 2602                   & \{ 2 4 6 15 27 29\}                    \\ \hline
+	30    & 122.23 & 18.12             & 2602                   & \{ 4 6 15 27 29\}                      \\ \hline
+	30    & 123.60 & 17.88            & 2602                   & \{ 4 10 27\}                           \\ \hline
+	30    & 122.23 & 17.76             & 2602                   & \{ 4 6 15 27 29\}                      \\ \hline
+	30    & 123.60 & 18.18              & 2602                   & \{ 4 10 27\}                           \\ \hline
+	30    & 122.23 & 18.27             & 2602                   & \{ 4 6 15 27 29\}                      \\ \hline
+	30    & 122.23 & 17.82             & 2602                   & \{ 4 6 15 27 29\}                      \\ \hline
+	30    & 122.23 & 18.14             & 2602                   & \{ 4 6 15 27 29\}                      \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                                 \\ \hline
+	30    & 122.51 & 18.35            & 2602                   &                                        \\ \hline
+\end{tabular}
+
+\section{Random Data Set 50}
+\subsection{Analysis}
+As for the previous chapter, when we increased the number of variables on synthetic generated data set, we got similar results. The genetic algorithm and PSO are high in both time and function evaluations. An odd thing can be observed when the hill climbing (with the best improvement neighbor selection strategy) was run: looking at all of the previous chapters we see that it's usually close to the first improvement version, but in this case, both the time and function evaluation are higher. This is caused by the bigger space of possible solution determined by those 50 variables.
+
+The true solution for the random data set with 50  values is \{0 4 18 22 24 25 26 38 41 46\} with an AIC value 186.29.
+
+The results of the algorithms are (\ref{rawResultsRandom50}):
+\begin{itemize}
+	\item \textit{Genetic Algorithm} didn't find the best solution in 10 runs. The results coincide only in 3 positions: 4, 18 and 22.
+	\item \textit{Hill Climbing First Improvement} didn't find the best solution in 10 runs. The results coincide only in 1 position, 38 which is found on every iteration.
+	\item \textit{Hill Climbing Best Improvement} didn't find the best solution in 10 runs. The results coincide only in 1 position, 38 which is found on every iteration.
+	\item \textit{Particle Swarm Optimization} didn't find the best solution in 10 runs. The results coincide only in 3 positions: 4, 18 and 38. But only on one run the values 4 and 18 are found together. 
+\end{itemize}
+
+Again, the algorithms weren't able to find the best solutions, and in this case the approximations are worse than the previous case. Same reason can be applied here, algorithms tend to go the lowest AIC value solutions. For this case (with 50 variables), another contributing factor, is the difference between the number of values used for creating the $y$ array (when the data was generated) which is $10$, and the total number of variables ($50$). This added a lot of noise in the overall solution spaces, which leaded to the obtained results. The convergence speed of the algorithms was influenced by this noise (see \ref{Avg Value Iteration Random 50}) , where we can see that all algorithms have troubles converging towards a value.
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/Random50ExecutionTime.png}
+	\caption{ Execution Time Random 50}
+	\label{Execution Time Random 50}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/Random50ObjectiveFunction.png}
+	\caption{ Objective Function Random 50 }
+	\label{Objective Function Random 50}
+\end{figure}
+
+\begin{figure}[ht]
+	\includegraphics[width=\textwidth]{Pictures/Random50AvgValueIteration.png}
+	\caption{ Avg Value Iteration Random 50 }
+	\label{Avg Value Iteration Random 50}
+\end{figure}
+
+\subsection{Raw Results}
+\label{rawResultsRandom50}
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Genetic Algorithm on Random Generated Data Set}                                                                                         \\ \hline
+	GA n & GA AIC & GA Exec Time & GA eval \# & \multicolumn{1}{c|}{GA solution}                                                                 \\ \hline
+	50   & 180.75 & 40.20             & 3165                  & \{ 0 2 5 12 14 18 21 24 26 27 30 38 39 42\}                                                      \\ \hline
+	50   & 173.29 & 42.59             & 3404                  & \{ 1 2 7 8 9 11 13 18 20 21 31 39 42 43\}                                                        \\ \hline
+	50   & 177.25 & 25.48             & 2074                  & \begin{tabular}[c]{@{}l@{}}\{ 1 2 5 6 8 15 17 20 21 23 24 27\\  28 35 37 38 45 49\}\end{tabular} \\ \hline
+	50   & 175.85 & 38.49             & 3109                  & \begin{tabular}[c]{@{}l@{}}\{ 2 8 9 10 13 18 19 21 23 28 32\\  37 38 43 44 48\}\end{tabular}     \\ \hline
+	50   & 173.41 & 63.75             & 4989                  & \{ 0 1 2 7 9 11 13 19 20 31 35 37 38 39 43\}                                                     \\ \hline
+	50   & 172.36 & 54.83             & 4090                  & \{ 1 2 7 8 9 10 23 26 31 37 38 39 42 46\}                                                        \\ \hline
+	50   & 173.43 & 68.21             & 5326                  & \begin{tabular}[c]{@{}l@{}}\{ 1 2 4 6 7 8 14 16 22 28 29 31 35 38 39 \\ 42\}\end{tabular}        \\ \hline
+	50   & 171.13 & 45.60             & 3743                  & \{ 2 4 7 15 23 30 35 39 41\}                                                                     \\ \hline
+	50   & 175.27 & 33.01             & 2742                  & \begin{tabular}[c]{@{}l@{}}\{ 2 7 9 10 12 15 17 21 28 32 33 35 38 39\\  42 45\}\end{tabular}     \\ \hline
+	50   & 175.42 & 21.45             & 1810                  & \{ 2 7 9 13 14 15 17 20 23 28 33 34 44\}                                                         \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                                                                                   \\ \hline
+	50   & 174.81 & 43.36             & 3445.2                &                                                                                                  \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing First Improvement Method on Random Generated Data Set}             \\ \hline
+	HCF n & HCF AIC     & HCF Exec Time & HCF eval \# & \multicolumn{1}{c|}{HCF solution} \\ \hline
+	50    & 161.44 & 3.91             & 309                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.44 & 3.71              & 332                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.44 & 3.30              & 304                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.44 & 3.32               & 279                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.44 & 2.72              & 260                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.44 & 3.22              & 285                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 162.38 & 2.72              & 243                    & \{ 2 9 21 35 37 38 39\}           \\ \hline
+	50    & 161.44 & 2.32              & 224                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.44 & 3.34              & 306                    & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.13 & 2.32              & 224                    & \{ 2 23 35 37 38\}                \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	50    & 161.50 & 3.08             & 276.6                  &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Hill Climbing Best Improvement Method on Random Generated Data Set}              \\ \hline
+	HCB n & HCB AIC     & HCB Exec Time & HCB eval \# & \multicolumn{1}{c|}{HCB solution} \\ \hline
+	50    & 161.13 & 13.89             & 1144                   & \{ 2 23 35 37 38\}                \\ \hline
+	50    & 161.44 & 14.30             & 1248                   & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.44 & 16.79             & 1456                   & \{ 2 28 38 39\}                   \\ \hline
+	50    & 162.38 & 18.29             & 1560                   & \{ 2 9 21 35 37 38 39\}           \\ \hline
+	50    & 161.13 & 17.48             & 1508                   & \{ 2 23 35 37 38\}                \\ \hline
+	50    & 161.13 & 12.74             & 1144                   & \{ 2 23 35 37 38\}                \\ \hline
+	50    & 161.44 & 14.82             & 1300                   & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.13 & 16.14             & 1456                   & \{ 2 23 35 37 38\}                \\ \hline
+	50    & 161.44 & 13.74             & 1196                   & \{ 2 28 38 39\}                   \\ \hline
+	50    & 161.13 & 17.31             & 1456                   & \{ 2 23 35 37 38\}                \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	50    & 161.37 & 15.55            & 1346.8                 &                                   \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c|l|}
+	\hline
+	\multicolumn{5}{|c|}{Particle Swarm Optimization on Random Generated Data Set}                        \\ \hline
+	PSO n & PSO AIC     & PSO Exec Time & PSO eval \# & \multicolumn{1}{c|}{PSO solution} \\ \hline
+	50    & 165.10 & 29.72             & 2602                   & \{ 2 4 18 28 39\}                 \\ \hline
+	50    & 161.76 & 28.19             & 2602                   & \{ 2 28 38\}                      \\ \hline
+	50    & 164.41 & 27.91             & 2602                   & \{ 2 21 23 32 35 38 39\}          \\ \hline
+	50    & 161.39 & 28.40             & 2602                   & \{ 2 23 35 38\}                   \\ \hline
+	50    & 163.77 & 28.06             & 2602                   & \{ 2 9 35 38 44\}                 \\ \hline
+	50    & 161.13 & 27.89             & 2602                   & \{ 2 23 35 37 38\}                \\ \hline
+	50    & 167.96 & 28.88             & 2602                   & \{ 1 2 7 21 27 28 35 38 48\}      \\ \hline
+	50    & 165.45 & 30.36             & 2602                   & \{ 1 2 20 26 28 37 38 39\}        \\ \hline
+	50    & 162.40 & 32.81             & 2602                   & \{ 2 28 38 44\}                   \\ \hline
+	50    & 163.81 & 30.85             & 2602                   & \{ 2 20 34 38\}                   \\ \hline
+	\multicolumn{5}{|c|}{Mean}                                                                            \\ \hline
+	50    & 163.71 & 29.30            & 2602                   &                                   \\ \hline
+\end{tabular}

@@ -1,0 +1,38 @@
+\chapter{Variable selection}
+%\lhead{Introduction}
+%\rhead{Radu-George Rusu}
+\label{problem}
+{"\textbf{Variable  selection}  means  selecting  which  variables  to  include  in  our  model (rather than some sort of selection which is itself variable). As such, it is a special case of model selection.  People tend to use the phrase “variable selection” when the competing models differ on which variables should be included, but agree on the mathematical form that will be used for each variable — e.g., temperature might or might not be included as a predictor, but there is no question about whether, if it is, we’d use temperature or $temperature ^ 2$ or log temperature."} [3]
+
+For regression we consider all the possible subsets and find the model that best fits the data according to some criteria \big(e.g. adjusted $R^2$, AIC and BIC). [4]
+In other words, to construct a model that predicts well the relationship between data.
+
+\textbf{AIC} \big(the Akaike Information Criterion) is an estimator of the quality of statistical models for a given set data relative to each of the other models. It estimate the likelihood of a model to predict the future values. 
+If AIC has minimum among all the other models means that we have a good model. [5]
+
+The better model is given by the smallest value of AIC. Practically AIC is approximating the difference between number of parameters and the likelihood of the model.
+
+The next formula is used to estimate Akaike Information Criterion:
+\textbf{$$-2 * ln(L) + 2 * k,$$}
+where: [5]
+\begin{itemize}
+	\item \textbf{L} is the value of likelihood,
+	\item \textbf{N} is the number of recorded measurements,
+	\item  \textbf{k} is the number of estimated parameters.
+\end{itemize}
+
+In this thesis AIC is computed using \textbf{lm} function from R:
+$$AIC(lm),$$
+where \textbf{lm} function fit the linear model and it is also computed in R:
+$$lm(y \sim x,)$$
+where \textbf{y} represents the dependent variables, and \textbf{x} represents the independent variables, the predictors.
+
+Another way used for fitting the linear model is \textbf{LARS}, least-angle regression. 
+
+The result of this algorithm is the mean of producing an estimate of which variable to include, also with their coefficients. This algorithm is similar to \textit{forward stepwise regression}. The difference between this two is that in LARS algorithm the estimated parameters are increased in a direction with the residual, and in forward regression the variables are included at every step. [6]
+
+One advantage of LARS algorithm is that it is as fast as forward selection.
+
+Another algorithm which can be applied modifying easily the LARS is \textbf{LASSO} algorithm, \textit{least absolute shrinkage and selection operator}. 
+
+LASSO algorithm uses both variable selection and regularization. [7]
