@@ -1,130 +1,96 @@
-\chapter{Algorithms}
-%\lhead{Algorithms}
-%\rhead{Radu-George Rusu}
-\label{chapt4}
+\chapter{Theoretical background}
+\lhead{Theoretical background}
+\rhead{Radu-George Rusu}
+\label{TheoreticalBackground}
 
-This chapter presents the algorithms used for solving the problem present in \ref{problem}. Since they are optimization algorithms, they will use AIC as the objective function and the following way of representing a candidate solution.
+This chapter will briefly describe the theoretical models used in the experiments presented in this paper.
 
-Considering we have a set of $n$ predictors in the initial problem. A candidate solution for this algorithm will be represented by a binary array of $n$ elements where if the $i$-th element is set it means that that variable will be taken as part of the solution and not otherwise. The particle swarm optimization is the only one that adds a tweak to this way of representing the solutions.
+\section{Expectation-Maximization}
+The Expectation-Maximization (EM) is an algorithmic template for finding the Maximum Likelihood Estimation (MLE) parameters in statistical models which are based on missing or latent data.\\
+The Maximum Likelihood Estimation problem can be defined as follows:
 
-The values of the algorithms parameters described in this chapter were chosen based on empiric observation made during the execution of those algorithms, and the best values were select to be presented in this paper.
+\fbox{
+\begin{minipage}{\textwidth}
+\textbf{MLE Problem}\\
+\textbf{Input}\\
+Y - set of observed data\\
+$p$ - probability distribution that we assume generated the X data set
 
-\section{Genetic algorithms}
-Genetic algorithms are adaptive heuristic algorithms based on natural selection. Following the natural selection, the fittest individuals are selected for reproduction in order to produce descendants of the next generations. [8]
+\textbf{Output}\\
+ $h^{MLE} = \underset{h}{argmax}$  $L(Y | h) = \underset{h}{argmax}$  $p(Y | h) $, where $h$ is the set of distribution parameters
+\end{minipage}
+}
 
-They maintain a population of candidate solution representations which are evolving over some generation/iterations. Each individual is a finite length vector of variables represented by {0,1}. The evolution is controlled by the fitness function (in this paper, a function based on AIC) that measures the individual quality and it is simulated through a succession of generations of a candidate solution population. [8]
+ When the entire set Y is formed out of observable data, then the above problem can be easily solved. A common approach, for this instance of the problem, is to take the derivative of the log-likelihood function and solve it for $h$. However, real life data is not always fully observed, and inside of the given data we have latent variables. In this particular case, the above-mentioned method doesn't work anymore, and an EM approach can be used.
+ 
+ In the case of latent data we can consider the Y set as being a reunion between $X \cup Z = Y$, where X is the set of visible data, and Z is the of hidden/latent data. The above-mentioned method doesn't work wince it is impossible to compute $p(Z | h)$.
+ 
+ \begin{figure}[H]
+ 	\includegraphics[width=\textwidth]{Pictures/004EMScheme.png}
+ 	\caption{EM Algorithm \cite{emCiortuz}}
+ 	\label{EmScheme}
+ 	%\textbf{Figure 2. Hill Climbing algorithm} [15]
+ \end{figure}
+ 
+ The EM algorithm (as show in \ref{EmScheme}) apply an iterative method, that for each iteration, computes two steps:
+ \begin{itemize}
+ 	\item E-Step: expectation of the latent variables based on the distribution parameters from the previous iteration and the visible data ($\mathbf{E[Z | X, h^{(t)}]}$).
+ 	\item M-Step: based on the results from the E-Step, the latent variables, can be considered as observed and the $h$ parameters for this step can be solved like in the classic MLE problem.
+ \end{itemize}
 
-First, let's see the language used by genetic algorithms. The solution is called chromosome and it is represented like genesis; the gene is the atomic information from a chromosome; the position occupied by a gene is called locus; all the possible values for a gene form the allele set of the gene; the population evolves by applying genetic operators: mutation and crossing; the chromosome on which a genetic operator is applied is called parent, and the resulting chromosome is called descendant; selection is the procedure by which the chromosomes that will survive in the next generation are chosen (better adapted individuals will be given better chances); the degree of adaptation is given the fitness function; the solution determined by a genetic algorithm is the best of the last generation. [8]
+In the most basic form of this algorithm, the initial values for $h^{(0)}$ are randomly selected, and as a stop condition a maximum number of iteration can be used, but this these two conditions can vary from problem to problem.
+ 
+ 
+ 
 
-The fitness function is used to measure the quality of chromosome, which indicates how close is a solution from the aim of finding the best solution.
+\section{Convolutional Neural Networks and Residual Networks}
+In computer vision and object detection/recognition in images, the classical neural networks involved a high number of weights which have to be learned, which, in turn, made the networks work slow on images that are bigger in size and sometimes even impractical. The main advantage of the \textbf{Convolutional Neural Networks (CNN)} is the idea of using the convolution operator (\ref{Convolution}), which drastically reduces the number of weights and makes them usable in practice.
 
-The probability of an individuals to be selected is given by this fitness function: the higher fitness, the higher probability.
-
-\begin{figure}
-	\includegraphics[width=\textwidth]{Pictures/GA.png}
-	\caption{ Flow of the genetic algorithm [9]}
-	\label{Flow of the genetic algorithm}
+ \begin{figure}[H]
+	\includegraphics[width=\textwidth]{Pictures/006Convolution.png}
+	\caption{Convolution operator}
+	\label{Convolution}
 	%\textbf{Figure 2. Hill Climbing algorithm} [15]
 \end{figure}
 
-The selection goal is to choose for survival the best adapted individuals.
+asdafadfgda MaxPool AvgPool
 
-Some of the effects of genetic algorithms are [10]: 
+The convolution operator result size depends on the following variables:
 \begin{itemize}
-	\item tending to fill the population with copies of the best individual from the population, using selection alone;
-	\item tending to cause the algorithms to coverage on a good optimal solution, using selection and crossover (see \ref{Crossover});
-	\item inducing a random walk through the search space using mutation alone
-	(see \ref{Mutation}).
+	\item $n$ - size of the input image (considering the input image is squared)
+	\item $f$ - size of the filter (also squared)
+	\item $p$ - padding of the initial image
+	\item $s$ - stride of the convolution operation
 \end{itemize}
+The convolution operator result size is:
+$$ (n, n) * (f, f) = ( \lfloor \frac{n + 2 \times p - f}{s} + 1 \rfloor , \lfloor \frac{n + 2 \times p - f}{s} + 1 \rfloor )$$
 
-\begin{figure}
-	\includegraphics[width=\textwidth]{Pictures/crossover.png}
-	\caption{Crossover [11]}
-	\label{Crossover}
+To observe the advantages of CNN over the classical NN we can take an example of a network formed only of two layers, a first one of size $1024\times1024$ which can be viewed as the input image, that is given in the grayscale, and a second layer of size $512\times512$, which is a first feature extraction layer of size $512\times512$.
+
+In a classical neural network every input from the first layer must be connected with every output on the second layer, and every connection has it's own weight, which, in the above case, would result in computing $1024 \times 1024 \times 512 \times 512 = 274,877,906,944$ weights. Also, in computer vision problem there is a need of more than one intermediate layer to extract the features inside an image.
+
+In the case of CNNs, the only weights that have to be computed for a layer are the values inside the filter, which in the above example can be considered a filter of size $512 \times 512 = 262,144‬$ with a stride of 1 and no padding. The number of weights that will be learned it's way less than in the case of classical neural networks, which allow more layers, and makes the CNN more practical for this problem. Also, in practical cases, the convolution operator can be an average/maximum over the target values, instead of a linear combination, and there will be no weights to learn on that level.
+
+ \begin{figure}[H]
+	\includegraphics[width=\textwidth]{Pictures/007SkipConnection.png}
+	\caption{Residual Block \cite{ResNetPaper}}
+	\label{SkipConnection}
 	%\textbf{Figure 2. Hill Climbing algorithm} [15]
 \end{figure}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{Pictures/mutation.png}
-	\caption{Mutation [12]}
-	\label{Mutation}
+Another issue that occurs in practical object detection in images cases, is the depth of the network. In order to learn complex features inside an image a neural network needs a high number of layers, to have space for learning every feature, which, in practice, leads to the vanishing gradient problem \cite{ResNetPaper}. This problem makes the training of this networks hard or even impossible, depending on the task. To solve this \textbf{Residual Networks} \cite{ResNetPaper} were developed.
+
+The fundamental idea of this networks is the addition of the residual blocks (\ref{SkipConnection}). In this blocks, the inputs are once again added to the output value, before the activation function, avoiding a "squishing" derivative, which in turn will result in a higher overall derivative of the entire block.
+
+With these methods, neural networks structures with 34, 50 or 152 layers were developed and used as show in \ref{ResNetExample}.
+
+ \begin{figure}[H]
+	\includegraphics[width=\textwidth]{Pictures/008ResNetExample.png}
+	\caption{Residual Networks Structure \cite{ResNetPaper}}
+	\label{ResNetExample}
 	%\textbf{Figure 2. Hill Climbing algorithm} [15]
 \end{figure}
 
-For the use cases presented in the next chapter of this paper, we use the following parameters, and their values, for the genetic algorithms:
-\begin{itemize}
-	\item $populationSize$ = 100 (the size of the population used at every iteration)
-	\item $mutationProbability$ = 0.001 (based on this we decide if the algorithm  applies mutation on an individual inside a population). This parameter is a probability.
-	\item $corssoverProbability$ = 0.7 (based on this we decide if the algorithm applies the crossover operator over an individual inside a population). This parameter is a probability.
-	\item $maxTimeWithoutImprovement$ = 20 (maximum number of iterations that the algorithm can't produce an improvement in the best solution).
-\end{itemize}
 
 
-\section{Hill Climbing}
-Hill Climbing is an heuristic algorithm which uses the iterative method to achieve a local search, that is called \textit{Iterative Improvement}. Often, it is used \textit{Iterated Hill Climbing} in which the algorithm is restarted to increase the degree of exploration of the search space. [13]
-
-Function \textit{Improve} looks in neighborhood the first candidate solution which is better than the current solution or the best solution (\textit{first improvement} or \textit{best improvement}). [13]
-
-The neighbors for one solution are those solutions that have a hamming distance of value 1.
-
-It starts with an arbitrary solution to a problem and increment the solution in order to find the better solution. The goal of this algorithm is to encounter the local maximum. [14]
-
-\begin{figure}
-	\includegraphics[width=\textwidth]{Pictures/HC.png}
-	\caption{ Hill Climbing algorithm [15]}
-	\label{Hill Climbing algorithmvEx}
-	%\textbf{Figure 2. Hill Climbing algorithm} [15]
-\end{figure}
-
-In this paper we used two versions of the neighbor selection strategy. The first one is the most used one, called Best Improvement, and it search to \textbf{all} of the current solution neighbors and selects the one that yields the best value for the objective function as the new current solution.
-
-The other version of the strategy is called First Improvement, and it goes iteratively, through the current solution neighbors, in an order deterministically established, and selects the first one that yields a better result that the current solution, and make that the current solution.
-
-Usually, the best improvement strategy is more faster in convergence towards the local optimum, but uses more resources (CPU), while the first improvement is more efficient with regards to resources but it can take more time till it reaches the final solution.
-
-
-\section{Particle Swarm Optimization}
-Particle Swarm Optimization \big(\textbf{PSO}\big) is a method which is used to improve a candidate solution regarding a given measure of quality. It was discovered using the simulations of individuals movement from a flock of birds or a fishpond. [17]
-
-Firstly PSO was designed like a continuous non-linear function optimization method, but then it was adapted to solve permutations problems, constraint problems, dynamic or multi-objective optimization. [18]
-
-The problem has a population of candidates solutions \big(particles), which are moving around a search space. The movement of every particle is accessible using it local best position, but are also used the best positions from the search space, which are updated as better positions that are found by the other particles. [18]
-
-Together with Ant Colony Optimization, it forms the class of Swarm Intelligence algorithms. \textbf{Swarm Intelligence} is a paradigm which uses the collective behavior in decentralized, self-organized systems. [19]
-
-The systems which are based on the artificial intelligence form are build using agent that interact locally with each other and with the environment. The locally interactions lead to the emergence of complex globally behavior. [19]
-
-Particle Swarm Optimization algorithm maintain a population of candidates solutions, which evolves along iterations by applying a number of operators, according to the information given by the a \textit{fitness function} which is measuring the individual merit. [19]
-
-The formulas used to update each individual in the population at iteration \textit{t + 1} are: [19]
-$$v_{t+1} = w_1 * v_t + w_2 * rand()(p - x) + w_3 * rand() (g - x),$$
-$$x_{t+1} = x_t + v_{t+1}$$
-
-The parameters $w_{2}$ and $w_{3}$, learning factors, represents the share of acceleration terms that attract each particle to particles \textit{p} and \textit{g}. [19]
-
-\begin{itemize}
-	\item $W_{1}$ - the share of inertia - ensures the balance between exploration / exploitation; is also used as a decreasing share of time \big(as in Simulated Annealing); [19]
-	\item $W_{2}$ - cognitive parameter - the tendency to duplicate past own actions that have proved successful
-	\item $W_{3}$ - social parameter - the tendency to follow the success of other individuals; [19]
-	\item maximum allowed speed - indirectly affects the ability to explore, reducing the speed value below a permissible limit. [19]
-\end{itemize}
-
-\begin{figure}
-	\includegraphics[width=\textwidth]{Pictures/PSO1.png}
-	\caption{ Flow of the particle swarm algorithm [20]}
-	\label{Flow of the particle swarm algorithm}
-	%\textbf{Figure 2. Hill Climbing algorithm} [15]
-\end{figure}
-
-This algorithm uses a tweak to the candidate solution representation as mentioned in the begging of this chapter. Since this algorithm is designed to run on continuous spaces, and the solution space for this problem is a discrete one we made the following abstraction: every solution is represented by $n$ real numbers. If the $i$-th number is less than or equal to 0, than variable won't be taken into the solution, and it will be taken otherwise.
-
-For this work we used the following parameters, and their values, for the PSO algorithm:
-\begin{itemize}
-	\item $populationSize$ = 100 (the size of the population used at every iteration)
-	\item $maxIterationNumber$ = 10 (the max number of iterations that the algorithm is allowed to perform)
-	\item $w_1$ = 0.9 (as described above)
-	\item $w_1$ = 1.4 (as described above)
-	\item $w_1$ = 1.4 (as described above)
-	\item $decreasingRate$ = 0.001 (decreasing rate for the $w_1$ parameter after each iteration)
-\end{itemize}
+TODO Add \textbf{Unets} if the experiment goes well.
