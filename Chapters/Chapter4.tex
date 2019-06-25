@@ -93,7 +93,7 @@ At this point, considering the previous section, we have a form for the expectat
 	\end{tabular}
 \end{table}
 
-The initialization values for the EM parameters were given as random between $0$ and $1$, for $\mu$ and $\sigma$. The $P(G_b)$ had an initial value of $0.9$ and $P(G_s)$ a value of $0.1$, since we expect to have more background than ships in an image. In order to stop the algorithm, a maximum iteration value of 12 was used, without any other restrictions. Parameter learning was executed on a resized ($256\times256$) for performance reasons, and the classification phase was run on the full-size image. After the parameters were computed, the following rule was used to classify pixels as either ship or background:
+The initialization values for the EM parameters were given as a random value between $0$ and $1$, for $\mu$ and $\sigma$. The $P(G_b)$ had an initial value of $0.9$ and $P(G_s)$ a value of $0.1$, since we expect to have more background than ships in an image. In order to stop the algorithm, a maximum iteration value of 12 was used, without any other restrictions. Parameter learning was executed on a resized ($256\times256$) for performance reasons, and the classification phase was run on the full-size image. After the parameters were computed, the following rule was used to classify pixels as either ship or background:
 \begin{itemize}
 	\item if $P(G_s | x_t) \geq P(G_b | x_t)$ then classify $x_t$ as \textbf{ship}
 	\item if $P(G_s | x_t) < P(G_b | x_t)$ then classify $x_t$ as \textbf{background}
@@ -130,7 +130,7 @@ After this steps, 3 main caveats of the EM algorithm have been identified:
 \section{Region Proposal Solution}
 \label{regPropSol}
 Since the EM algorithm by itself had the caveats mentioned in \ref{emres}, a pipeline \ref{arch1} around the algorithm was developed.
-To solve \textbf{(P1)} a Residual Network (with a ResNet34 architecture \cite{ResNetPaper}) was used for classifying the images, in images with ships and with no ships. Using this, the EM algorithm could be ran, only on the images that are certain to have ships. The network was train on \textbf{10000} images, plus rotation with -90 and 90 degrees, randomly selected from the train set of the initial problem.
+To solve \textbf{(P1)} a Residual Network (with a ResNet34 architecture \cite{ResNetPaper}) was used for classifying the images, in images with ships and with no ships. Using this, the EM algorithm could be ran, only on the images that are certain to have ships. The network was train on \textbf{10000} images, plus rotation preprocessing with -90 and 90 degrees, randomly selected from the train set of the initial problem.
 
 \begin{figure}[h]
 	\centering
@@ -145,7 +145,7 @@ Finally, in the third phase, another Residual Network was used in order to remov
 \begin{itemize}
 	\item First we split the EM predicted image in 25 crops, of size $224 \times 224$.
 	\item Only the windows that have at least 35 (\ref{shipzisepixeltable}) pixels predicted as ship will be considered as a possible valid prediction.
-	\item This Residual Network also used the ResNet34 architecture \cite{ResNetPaper}, and was trained on $224\times224$ random crops ($\sim \mathbf{50000}$, taken the same way as the selection for prediction), that is capable of classifying the idea of ship/no-ship.
+	\item This Residual Network also used the ResNet34 architecture \cite{ResNetPaper} that is capable of classifying the idea of ship/no-ship, and was trained on $224\times224$ random crops ($\sim \mathbf{50000}$, taken the same way as the selection for prediction).
 \end{itemize}
 
 \section{Region Proposal Example Run}
@@ -157,7 +157,7 @@ The following figures shows a picture in different stages of processing:
 	\item \ref{final_result_pic} - the final result compared to the initial picture
 \end{enumerate}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.45\textwidth]{Pictures/011Original.png}
 	\includegraphics[width=0.45\textwidth]{Pictures/011GrayScale.png}
@@ -165,14 +165,14 @@ The following figures shows a picture in different stages of processing:
 	\label{orig_pic}
 \end{figure}
 
-\begin{figure}[h] 
+\begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.45\textwidth]{Pictures/011EMPred.png}
 	\includegraphics[width=0.45\textwidth]{Pictures/011Denoising.png}
 	\caption{EM Result before and after denoising}
 	\label{em_pic}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[height=0.6\textheight]{Pictures/011Proposals.png}\\
 	\caption{9/25 proposed regions}
@@ -219,7 +219,7 @@ The following figures shows a picture in different stages of processing:
 	\caption{EM Result and Pixel Exclusion}
 	\label{em_pic_unet}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.45\textwidth]{Pictures/011Original.png}
 	\includegraphics[width=0.45\textwidth]{Pictures/014FinalResult.png}

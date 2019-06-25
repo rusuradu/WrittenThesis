@@ -1,11 +1,12 @@
-\chapter{Performance and Results}
-\lhead{Performance and Results}
+\chapter{Results}
+\lhead{Results}
 \rhead{Radu-George Rusu}
-No-machine
-Region prop
-Maybe U-Nets
 
-\begin{table}
+The Airbus Ship Dataset Challenge \cite{AirbusDataSetChallenge} offers an automatic method of evaluation that, for every solution, computes the $F_2$ score. In order to avoid leader-board probing (competitors trying to over-fit the model on the test data), the test data set is split in two datasets. A public test dataset that contains $12\%$ of the original test images, and a private test dataset that contains the other, $88\%$ of the original test images.
+
+To have a base model for comparison against the presented solutions, a No-Machine algorithm has been chosen. This algorithm evaluates every pixel as being a background pixels (no detection involved). The $F_2$ score for this algorithm is actually a percentage of how many images doesn't have ships in the image.
+
+\begin{table}[h]
 	\centering
 	\begin{tabular}{|c|c|c|}
 		\hline
@@ -14,5 +15,33 @@ Maybe U-Nets
 		Region Proposal & 0.78052	& 0.58810 \\ \hline
 		U-Net & 0.78424	& 0.61663  \\ \hline
 	\end{tabular}
-	\captionof{table}{Result on the competition score}\label{resultOnComp}
+	\captionof{table}{Result on the competition score}
+	\label{resultOnComp}
 \end{table}
+
+The table \ref{resultOnComp} present the results as scored by the Kaggle automatic evaluation. Both of the proposed solution have a better score than the No-Machine algorithm, which means that the two proposed solutions correctly identify images that have ships and the ones that does not. The results of the two proposed solutions are similar on both datasets, with small improvements when using the U-Net solution. This improvement is happening because of the granularity that the U-Net is using over the region proposal solution, which uses hard-coded dimensions and positions for the crops that can became region proposal for final prediction. It is worth mentioning that the $F_2$ score, computed as described in \ref{DatasetChapter}, penalizes false negatives over no prediction, which explains the small difference between No-Machine and the proposed solutions. As seen in \ref{resultOnComp}, the two solution have the tendency to classify small pockets of pixels as ships, which will drastically decrease the $F_2$ score for that respective image.
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Pictures/016Comparison4.png}
+	\caption{False Negative Size}
+	\label{false_neg_size}
+\end{figure}
+
+Analyzing \ref{DatasetChapter}, the two algorithms, behaves in a similar fashion. The better behavior of the U-Net solution can be spotted since the false negatives produced by this, are smaller in area than the ones from the Region Proposal solution \ref{false_neg_size}. Again, the rigid character of the Region Proposal solution is seen in the \ref{false_neg_size}, where a big part of the port wasn't declassified because it was part of the same region with a ship inside, which the second Residual Network classified it as ship. Although from a visual perspective the U-Net architecture gives a better result, the $F_2$ score will be similar (not equal since the two predictions have different area of the ship mask).
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{Pictures/016Comparison1.png}\\
+	\includegraphics[width=\textwidth]{Pictures/016Comparison2.png}
+	\caption{False Positive}
+	\label{false_positive}
+\end{figure}
+
+Overall the two solutions are comparable in terms of $F_2$ score, but on a visual analysis of the results, the U-Net architecture produces less false positives \ref{false_positive} and false negatives. The figure \ref{Final_Result} presents a few more uses cases that confirms the above conclusions.
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{Pictures/016Comparison3.png}
+	\includegraphics[width=\textwidth]{Pictures/016Comparison5.png}
+	\includegraphics[width=\textwidth]{Pictures/016Comparison6.png}
+	\caption{Final Result comparison}
+	\label{Final_Result}
+\end{figure}

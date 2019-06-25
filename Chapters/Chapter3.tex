@@ -21,9 +21,9 @@ $p$ - probability distribution that we assume generated the Y data set
 \end{minipage}
 }
 
- When the entire set Y is formed out of observable data, then the above problem can be easily solved. A common approach for this instance of the problem, is to take the derivative of the log-likelihood function and solve it for $h$. However, real life data is not always fully observed, and inside of the given data we have latent variables. In this particular case, the above-mentioned method doesn't work anymore, and an EM approach can be used.
+ When the entire set Y is formed out of observable data, the above problem can be easily solved. A common approach for this instance of the problem, is to take the derivative of the log-likelihood function and solve it for $h$. However, real life data is not always fully observed, and inside of the given data we have latent variables. In this particular case, the above-mentioned method doesn't work anymore, and an EM approach can be used.
  
- In the case of latent data we can consider the Y set as being a reunion between $X \cup Z = Y$, where X is the set of visible data, and Z is the set of hidden/latent data. The above-mentioned method doesn't work since it is impossible to compute $p(Z | h)$.
+ In the case of latent data we can consider the Y set as being a reunion between $X \cup Z = Y$, where X is the set of visible data, and Z is the set of hidden/latent data. The initial method doesn't work since it is impossible to compute $p(Z | h)$.
  
  \begin{figure}[H]
  	\includegraphics[width=\textwidth]{Pictures/004EMScheme.png}
@@ -53,7 +53,7 @@ In computer vision and object detection/recognition in images, the classical neu
 	%\textbf{Figure 2. Hill Climbing algorithm} [15]
 \end{figure}
 
-Other two popular operators are the AveragePooling and MaxPooling, which as the name suggests, just extract either the average or the maximum value of the values in the corresponding square. Although these operators doesn't have as much expression power as the linear combination \ref{Convolution}, they don't have any weights to learn during the training phase.
+Other two popular operators are the AveragePooling and MaxPooling, which as the name suggests, just extract either the average or the maximum value of the values in the corresponding square. Although these operators doesn't have as much expression power as the linear combination \ref{Convolution}, they don't have any weights to be learned during the training phase.
 
 The convolution operator result size depends on the following variables:
 \begin{itemize}
@@ -80,7 +80,7 @@ In the case of CNNs, the only weights that have to be computed for a layer are t
 
 Another issue that occurs in practical object detection in image cases, is the depth of the network. In order to learn complex features inside an image, a neural network needs a high number of layers, to have space for learning every feature, which, in practice, leads to the vanishing gradient problem \cite{ResNetPaper}. This problem makes the training of these networks hard or even impossible, depending on the task. To solve this \textbf{Residual Networks} \cite{ResNetPaper} were developed.
 
-The fundamental idea of these networks is the addition of the residual blocks (\ref{SkipConnection}). In this blocks, the inputs are once again added to the output value, before the activation function, avoiding a "squishing" derivative, which in turn will result in a higher overall derivative of the entire block.
+The fundamental idea of these networks is the addition of the residual blocks (\ref{SkipConnection}). In this blocks, the inputs are once again added to the output value of a later layer, before the activation function, avoiding a "squishing" derivative, which in turn will result in a higher overall derivative of the entire block.
 
 With these methods, neural networks structures with 34, 50 or 152 layers were developed and used as show in \ref{ResNetExample}.
 
@@ -91,7 +91,7 @@ With these methods, neural networks structures with 34, 50 or 152 layers were de
 	%\textbf{Figure 2. Hill Climbing algorithm} [15]
 \end{figure}
 
-The neural networks described above behave well on object recognition and object detection problems. Another common case in image processing is the segmentation problem, where similar pixels inside a picture are grouped together. In this particular case, the CNN might not work well in the form described above, because every pixel of the image can have it's own classification, and the convolution operator is specialized in contracting image features, hence reducing the number of outputs of the network. To solve this problem, \textbf{U-Nets} networks \cite{Unet} have been developed. The name U-Net comes from the visual representation of the architecture (\ref{UnetArchitecture}) which resembles an U. There are two main parts of this architecture, the contracting path, and the expansive path. The contracting path behaves as an usual convolutional neural network extracting features from the image. The expansive path uses the Transposed Convolution Operator, which helps the networks reconstruct the image at the initial resolution, from the feature vector that was computed by the contracting path.
+The neural networks described above behave well on object recognition and object detection problems. Another common case in image processing is the segmentation problem, where similar pixels inside a picture must be grouped together. In this particular case, the CNN might not work well in the form described above, because every pixel of the image can have it's own classification, and the convolution operator is specialized in contracting image features, hence reducing the number of outputs of the network. To solve this problem, \textbf{U-Nets} networks \cite{Unet} have been developed. The name U-Net comes from the visual representation of the architecture (\ref{UnetArchitecture}) which resembles the U letter. There are two main parts of this architecture, the contracting path, and the expansive path. The contracting path behaves as an usual convolutional neural network extracting features from the image. The expansive path uses the Transposed Convolution Operator, which helps the networks reconstruct the image at the initial resolution, from the feature vector that was computed by the contracting path. 
 
  \begin{figure}[H]
 	\includegraphics[width=\textwidth]{Pictures/012Unet.png}

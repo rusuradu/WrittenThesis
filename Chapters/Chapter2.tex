@@ -13,12 +13,12 @@ This chapter presents the data set used for the experiment in this paper, the Ka
 \end{figure}
 
 \section{Airbus Ship Dataset}
-The Airbus Ship Dataset is an image dataset that was used in the Airbus Ship Detection Challenge \cite{AirbusDataSetChallenge} on \url{www.kaggle.com}. The aim of this competition is to detect ships inside an image taken from an aerial view. As the competition description says, this detection can help multiple organizations such as environmental organization, insurance companies to have knowledge of illegal activities done at sea. A few examples of the training set can be found in Figure \ref{TrainSetExample}.% Todo !!!Challenge with clouds ports etc etc small sizes?
+The Airbus Ship Dataset is an image dataset that was used in the Airbus Ship Detection Challenge \cite{AirbusDataSetChallenge} on \url{www.kaggle.com}. The aim of this competition is to detect ships inside an image taken from an aerial view. As the competition description says, this detection can help multiple organizations such as environmental organization and insurance companies to have knowledge of illegal activities done at sea. A few examples of the training set can be found in Figure \ref{TrainSetExample}.
 
 
 \section{Analysis}
 The competition provides both testing and training datasets in a large amount. The train set is composed of \textbf{231723} pictures, of size \textbf{768x768} pixels, in JPEG format, each of them having a set of pixels assigned as being ship pixels. To avoid specifying each pixel separately, for size reasons, the run length encoding is used. Every pixel is numbered from 1 to maximum size, top down, left right order. Pixel (1, 1) will have index 1, pixel (2, 1) index 2 etc. Run length encoding is formed of 2k numbers, the numbers in odd position (1 - indexed) specifies the starting index of a pixel ship sequence, and the ones in even position specifies the length of the sequence.
-For example, the sequence: \textit{5 3 10 2}, encodes the ship pixels \textit{\{5, 6, 7, 10, 11\}}. Those encodings are provided via an \textbf{.csv} file, with two columns, \textbf{ImageId} and \textbf{EncodedPixels}. Also, in this file, every ship is given as a separate entry, so a picture can appear multiple times in this file, but at least once. (See table \ref{traindfhead}). The figure \ref{OrigMask} shows the example images with their training masks.\\
+For example, the sequence: \textit{5 3 10 2}, encodes the ship pixels \textit{\{5, 6, 7, 10, 11\}}. Those encodings are provided via an \textbf{.csv} file, with two columns, \textbf{ImageId} and \textbf{EncodedPixels}. Also, in this file, every ship is given as a separate entry, so a picture can appear multiple times in this file and at least once. (See table \ref{traindfhead}). The figure \ref{OrigMask} shows the example images with their training masks.\\
 
 \begin{table}[H]
 	\centering
@@ -49,7 +49,7 @@ The test set provided by the competition contains \textbf{15607} pictures of the
 	\label{OrigMask}
 \end{figure}
 
-On a first inspection of this dataset, it can be observed that there are more pictures with no ship in them (0 encoded pixels), then the number of pictures with ships (as shown in table \ref{shipnoshiptable}). It can be seen that for every picture that have at least one ship in it, there are two pictures with no ship in it.
+On a first inspection of this dataset, it can be observed that there are more pictures with no ship in them (0 encoded pixels), then the number of pictures with ships (as shown in table \ref{shipnoshiptable}). It can be seen that for every picture that has at least one ship in it, there are two pictures with no ship in it.
 
 \begin{table}[H]
 	\centering
