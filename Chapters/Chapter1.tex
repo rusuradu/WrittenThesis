@@ -1,10 +1,17 @@
 \chapter*{Introduction}
-%\lhead{Introduction}
-%\rhead{Radu-George Rusu}
+\lhead{Introduction}
+\rhead{Radu-George Rusu}
 \addcontentsline{toc}{chapter}{Introduction}
-Intro
+Machine Learning (ML) is the field that addresses the problem of how to use historical data to produce accurate models or predictions for new data. A Machine Learning Algorithm, based on data-points from the historical data or train data, produces a model that can be later used for giving the best approximation for new inputs or test data. With the increase in computing resources in the recent years, a lot of ML algorithms have became usable in practice in various situations.
 
-object detection
-object recognition
-segmentation
+The process of computing the model is called training or learning. Starting from this, the ML learning processes can be split into two main categories: \textit{supervised learning} and \textit{unsupervised learning}. In \textit{supervised} learning the training data set (historical data), has labels, the classification (number of classes and the model of each class) is known at the training phase. After the training, the computed model must classify the new inputs (test data) with the best class approximation of the input. When the unsupervised learning procedure is used, the classes of train data are not known from the beginning (data has no labels), but a certain model is enforced on them (number of classes, a distribution function that generated the data etc.), and the training phase produces the best parameters for the enforced model.
 
+A linked domain with ML is computer vision. Recently, with the incentive for autonomous driving, automatic image/video moderation and others, the computer vision algorithms have become more used in practical environments. Three main problems can be highlighted from this field: \textit{object classification}, \textit{object detection} and \textit{image segmentation}. Object classification is the process of assign a label to a certain image, linked to the object that is inside that picture (i.e. labeling and image with a cat with the label "Cat"). Object detection in images try to find the exact position of an object in an image (usually by giving bounding boxes for every object of interest in the picture). In most practical cases detection is used together with classification. The image segmentation problem refers to grouping pixels that are "semantically similar".
+
+This thesis take into consideration both supervised learning and unsupervised learning, and tries to solve a segmentation problem, by usage of object classification.
+
+This thesis is structured to discuss the problem statement that is proposed for solving, the theoretical background needed, and two proposed solutions with the corresponding results and comparison between them.
+
+The Airbus Ship Detection Challenge section describes the origin of the data set used in this thesis, an analysis over how the data looks and how is distributed and a metric that will be used for later evaluation of the models. The theoretical background section presents the models and the basic theory behind them, that will be used in the solutions.
+
+The Experiment setup section is showing the thought process of the solution and the two solutions with differences in structure and example runs. The result section is summarizing the results by the two models, and other base models, and compares them to one another. The last chapter draws the conclusions of this thesis and sets the future improvements/experiments that can be conducted on the same problem.

@@ -1,3 +1,6 @@
 \chapter{Conclusions}
-\lhead{Conclusions and future work}
+\lhead{Conclusions}
 \rhead{Radu-George Rusu}
+This thesis presented a good starting point for using an unsupervised learning procedure, with the help of supervised learning, to detect ships from an aerial point of view. The EM algorithm works comparably well with both Residuals Networks and U-Net Network Architecture as shown in the Results chapter. Although, from the $F_2$ metric perspective the two solutions proposed didn't produce a large improvement over the base model, the expectation-maximization algorithm by itself, behaved well from a visual perspective, and can be used, in a practical environment, in conjunction with external help. The algorithm can be improved or even parallelized to reduce the execution time and to not give up accuracy.
+
+The EM underlying model used is relatively simple, hence it can be improved with additional work. A first idea could be the usage of multi-level EM as shown in \cite{EMObjectConcealement}, or by using a different probability function (e.g. more than two Gaussians that generated the data). The biggest challenge that these solutions faced was the color similarity between ships and ports which gives us false negatives and a lower $F_2$ score. On the other hand, when the picture were taken "at sea", the algorithm produces good results. With this in mind, the algorithm in the actual form (or eventually improved forms) can be used on datasets that match the property of having two main colors scheme inside them.
