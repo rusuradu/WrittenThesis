@@ -38,13 +38,11 @@ $p$ - probability distribution that we assume generated the Y data set
  	\item M-Step: based on the results from the E-Step, the latent variables, can be considered as observed and the $h$ parameters for this step can be solved like in the classic MLE problem.
  \end{itemize}
 
-In the most basic form of this algorithm, the initial values for $h^{(0)}$ are randomly selected, and as a stop condition a maximum number of iterations can be used, but these two conditions can vary from problem to problem.
+In the most basic form of this algorithm, the initial values for $h^{(0)}$ are randomly selected, and as a stop condition a maximum number of iterations is  used, but these two conditions can vary from problem to problem.
  
  
- 
-
 \section{Neural Networks for object detection}
-In computer vision and object detection/recognition in images, the classical neural networks involved a high number of weights which have to be learned, which in turn, makes the networks work slow on images that are bigger in size and sometimes even impractical. The main advantage of the \textbf{Convolutional Neural Networks (CNN)} \cite{ConvNeuralNetwork} is the idea of using the convolution operator (\ref{Convolution}), which drastically reduces the number of weights to be learned and makes them usable in practice.
+In computer vision and object detection/recognition in images, the classical neural networks involves a high number of weights that have to be learned, which in turn, makes the networks work slow on images that are bigger in size and sometimes even impractical. The main advantage of the \textbf{Convolutional Neural Networks (CNN)} \cite{ConvNeuralNetwork} is the idea of using the convolution operator (\ref{Convolution}), which drastically reduces the number of weights to be learned during training phase and makes them usable in practice.
 
  \begin{figure}[H]
 	\includegraphics[width=\textwidth]{Pictures/006Convolution.png}
@@ -65,11 +63,11 @@ The convolution operator result size depends on the following variables:
 The convolution operator result size is:
 $$ (n, n) * (f, f) = \bigg( \bigg\lfloor \frac{n + 2 \times p - f}{s} + 1 \bigg\rfloor , \bigg\lfloor \frac{n + 2 \times p - f}{s} + 1 \bigg\rfloor \bigg)$$
 
-To observe the advantages of CNN over the classical NN we can take an example of a network formed only of two layers. A first one of size $1024\times1024$ which can be viewed as the input image, that is given in the grayscale, and a second layer of size $512\times512$, which is a first feature extraction layer of size $512\times512$.
+To observe the advantages of CNN over the classical NN we can take an example of a network formed only of two layers. A first one of size $1024\times1024$ which can be viewed as the input image, that is given in grayscale, and a second layer of size $512\times512$, which is a first feature extraction layer.
 
 In a classical neural network every input from the first layer must be connected with every output on the second layer, and every connection has it's own weight, which, in the above case, would result in computing $1024 \times 1024 \times 512 \times 512 = 274,877,906,944$ weights. Also, in computer vision problem there is a need of more than one intermediate layer to extract the features inside an image.
 
-In the case of CNNs, the only weights that have to be computed for a layer are the values inside the filter, which in the above example can be considered a filter of size $512 \times 512 = 262,144‬$ with a stride of 1 and no padding. The number of weights that will be learned it's way less than in the case of classical neural networks, which allow more layers, and makes the CNN more practical for this problem. Also, in practical cases, the convolution operator can be an average/maximum over the target values, instead of a linear combination, and there will be no weights to learn on that level.
+In the case of CNNs, the only weights that have to be computed for a layer are the values inside the kernel, which in the above example can be considered a kernel of size $512 \times 512 = 262,144‬$ with a stride of 1 and no padding. The number of weights that will be learned it's way less than in the case of classical neural networks, which allows more layers, and makes the CNN more practical for this problem. Also, in practical cases, the convolution operator can be an average/maximum over the target values, instead of a linear combination, and there will be no weights to learn on that level.
 
  \begin{figure}[H]
 	\includegraphics[width=\textwidth]{Pictures/007SkipConnection.png}
@@ -91,7 +89,7 @@ With these methods, neural networks structures with 34, 50 or 152 layers were de
 	%\textbf{Figure 2. Hill Climbing algorithm} [15]
 \end{figure}
 
-The neural networks described above behave well on object recognition and object detection problems. Another common case in image processing is the segmentation problem, where similar pixels inside a picture must be grouped together. In this particular case, the CNN might not work well in the form described above, because every pixel of the image can have it's own classification, and the convolution operator is specialized in contracting image features, hence reducing the number of outputs of the network. To solve this problem, \textbf{U-Nets} networks \cite{Unet} have been developed. The name U-Net comes from the visual representation of the architecture (\ref{UnetArchitecture}) which resembles the U letter. There are two main parts of this architecture, the contracting path, and the expansive path. The contracting path behaves as an usual convolutional neural network extracting features from the image. The expansive path uses the Transposed Convolution Operator, which helps the networks reconstruct the image at the initial resolution, from the feature vector that was computed by the contracting path. 
+The neural networks described above behave well on object recognition and object detection problems. Another common case in image processing is the segmentation problem, where similar pixels inside a picture must be grouped together. In this particular case, the CNN might not work well in the form described above, because every pixel of the image can have it's own classification, and the convolution operator is specialized in contracting image features, hence reducing the number of outputs of the network. To solve this problem, \textbf{U-Nets} networks \cite{Unet} have been developed. The name U-Net comes from the visual representation of the architecture (\ref{UnetArchitecture}) which resembles the U letter. There are two parts of this architecture, the contracting path, and the expansive path. The contracting path behaves as an usual convolutional neural network extracting features from the image. The expansive path uses the Transposed Convolution Operator \cite{ConvolutionOperatorPaper}, which helps the networks reconstruct the image at the initial resolution, from the feature vector that was computed by the contracting path. 
 
  \begin{figure}[H]
 	\includegraphics[width=\textwidth]{Pictures/012Unet.png}

@@ -39,7 +39,7 @@ For example, the sequence: \textit{5 3 10 2}, encodes the ship pixels \textit{\{
 	\captionof{table}{Train data set sample}\label{traindfhead}
 \end{table}
 
-The test set provided by the competition contains \textbf{15607} pictures of the same size as the ones in the training set, and the result that is submitted must also use the run length encoding described above.
+The test set provided by the competition contains \textbf{15606} pictures of the same size as the ones in the training set, and the result that is submitted must also use the run length encoding described above.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.75\textwidth]{Pictures/015OrigMaskExample1.png} \\
@@ -90,7 +90,7 @@ To evaluate possible solutions for this competition, the $F_2$ score was used. T
 	\item the $IoU$ between predicted pixels (pp) and true pixels (tp) of a ship is computed as $IoU = \frac{pp \cap pt}{pp \cup pt}$
 	\item if this value is higher than $t$, then this item is consider a true positive (a hit)
 	\item if this value is lower than $t$, then this is consider either a false negative (a predicted ship that has no true ship) or a false positive (there is no predicted ship for a true ship)
-	\item the $F_2(t) =\frac{5TP(t)}{5TP(t) +4FN(t) + FP(t)}$ is computed
+	\item the $F_2(t) =\frac{5TP(t)}{5TP(t) + 4FN(t) + FP(t)}$ is computed
 	\item the final score for an image is computed as $FS(image) = \frac{\sum_{t \in T} F_2(t)}{\big{|}T\big{|}}$
 \end{itemize}
 
